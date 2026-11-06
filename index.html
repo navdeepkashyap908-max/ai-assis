@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tidewell Watches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F0; --surface:#FAFBFA; --ink:#1B2A2F; --muted:#5C6B70;
+  --line:#D3DAD8; --brass:#9A7A43; --accent:#2F5D50;
+  --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:rgba(238,241,240,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:var(--serif);font-size:1.4rem;font-weight:600;text-decoration:none}
+nav{display:flex;gap:24px;align-items:center}
+nav a{text-decoration:none;font-weight:500}
+nav a:hover{color:var(--accent)}
+.cart-btn{background:var(--ink);color:#fff;border:0;border-radius:999px;padding:8px 16px;font:inherit;font-weight:600;cursor:pointer}
+.menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:56px 0 72px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,6vw,4.4rem);line-height:1.05;letter-spacing:-.02em}
+.hero p{margin:20px 0 28px;color:var(--muted);max-width:44ch;font-size:1.1rem}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;border:0;border-radius:8px;padding:12px 22px;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{background:#244a40}
+.hero-watch{text-align:center}
+.hero-watch svg{width:min(100%,300px);height:auto;filter:drop-shadow(0 18px 24px rgba(27,42,47,.25))}
+.swatches{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.swlabel{font-size:.9rem;color:var(--muted);margin-top:8px}
+
+/* shop */
+section{padding:56px 0}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{color:var(--muted);margin-bottom:24px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.chip{background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font:inherit;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column}
+.card svg{width:120px;margin:0 auto 12px;display:block}
+.card h3{font-family:var(--serif);font-weight:600;font-size:1.2rem}
+.card .cat{color:var(--muted);font-size:.9rem}
+.card .desc{font-size:.95rem;margin:10px 0 16px;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center}
+.price{font-weight:600;font-size:1.1rem}
+.add{background:transparent;border:1.5px solid var(--ink);border-radius:8px;padding:7px 14px;font:inherit;font-weight:600;cursor:pointer}
+.add:hover{background:var(--ink);color:#fff}
+
+/* about + contact */
+.about{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.about h3{font-family:var(--serif);font-size:1.2rem;margin-bottom:6px}
+.about p{color:var(--muted)}
+.contact{background:var(--ink);color:#fff;border-radius:16px;padding:40px 28px}
+.contact p{color:#B9C5C2;margin-bottom:20px}
+.contact form{display:flex;gap:10px;flex-wrap:wrap}
+.contact input{flex:1 1 220px;padding:12px 14px;border-radius:8px;border:0;font:inherit}
+.contact .btn{background:var(--brass)}
+#msg{margin-top:12px;min-height:1.5em;color:#E9D9B7}
+footer{padding:32px 0;text-align:center;color:var(--muted);font-size:.9rem}
+
+/* cart drawer */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(380px,100%);background:var(--surface);z-index:40;padding:24px;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+.drawer.open{transform:none}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.drawer h2{font-size:1.5rem;margin:0}
+.x{background:none;border:0;font-size:1.6rem;cursor:pointer}
+#items{flex:1;overflow:auto}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.qty{display:flex;align-items:center;gap:8px}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer}
+.empty{color:var(--muted)}
+.total{display:flex;justify-content:space-between;font-weight:600;font-size:1.15rem;padding:16px 0}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:30;display:none}
+.scrim.show{display:block}
+
+/* responsive */
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr;padding-top:32px}
+  .about{grid-template-columns:1fr}
+  .menu-btn{display:block}
+  nav{display:none;position:absolute;top:64px;left:0;right:0;background:var(--bg);flex-direction:column;align-items:flex-start;padding:16px 20px;border-bottom:1px solid var(--line)}
+  nav.open{display:flex}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top">Tidewell</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" aria-label="Main">
+      <a href="#shop">Shop</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <button class="cart-btn" id="cartBtn">Cart (<span id="count">0</span>)</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <h1>Watches that keep time and keep up.</h1>
+      <p>Steel cases, sapphire glass and straps you can swap in seconds. Made to be worn every day, from the office to the trail.</p>
+      <a class="btn" href="#shop">Shop watches</a>
+    </div>
+    <div class="hero-watch">
+      <div id="heroWatch" aria-label="Live analog watch showing the current time" role="img"></div>
+      <div class="swatches" id="swatches"></div>
+      <p class="swlabel" id="swlabel"></p>
+    </div>
+  </div>
+
+  <section id="shop">
+    <div class="wrap">
+      <h2>Shop the collection</h2>
+      <p class="sub">Free shipping and a 2-year warranty on every watch.</p>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about">
+      <div><h3>Built to last</h3><p>316L stainless steel cases and scratch-resistant sapphire crystals.</p></div>
+      <div><h3>Water resistant</h3><p>Every model is tested to at least 50 metres, so rain and handwashing are fine.</p></div>
+      <div><h3>30-day returns</h3><p>Wear it for a month. If it is not right, send it back for a full refund.</p></div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact">
+        <h2>Get new releases first</h2>
+        <p>Enter your email and we will tell you when new watches arrive.</p>
+        <form id="form" novalidate>
+          <input type="email" id="email" placeholder="you@example.com" aria-label="Email address" required>
+          <button class="btn" type="submit">Subscribe</button>
+        </form>
+        <div id="msg" role="status"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 Tidewell Watches. All rights reserved.</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="drawer-top"><h2>Your cart</h2><button class="x" id="closeCart" aria-label="Close cart">&times;</button></div>
+  <div id="items"></div>
+  <div class="total"><span>Total</span><span id="total">₹0</span></div>
+  <button class="btn" id="checkout">Checkout</button>
+</aside>
+
+<script>
+const products = [
+  {id:1,name:"Harbor 38",cat:"Dress",price:4999,dial:"#F4F1E8",ink:"#1B2A2F",strap:"#6B4A32",desc:"Cream dial, brown leather strap, 38 mm steel case."},
+  {id:2,name:"Midnight Quartz",cat:"Dress",price:6499,dial:"#1F2A44",ink:"#F4F1E8",strap:"#2B2B2B",desc:"Deep navy dial with a black leather strap."},
+  {id:3,name:"Fieldmaster",cat:"Field",price:3999,dial:"#3E5B45",ink:"#F4F1E8",strap:"#8A7A55",desc:"Olive dial and canvas strap for long days outdoors."},
+  {id:4,name:"Tide Diver",cat:"Sport",price:7999,dial:"#0F4C5C",ink:"#FFFFFF",strap:"#0F4C5C",desc:"Teal dial, rubber strap, water resistant to 200 m."},
+  {id:5,name:"Ember Sport",cat:"Sport",price:6999,dial:"#B5472B",ink:"#FFFFFF",strap:"#222222",desc:"Rust-red dial with a quick-release silicone strap."},
+  {id:6,name:"Slate Minimal",cat:"Dress",price:3499,dial:"#D9DCDB",ink:"#1B2A2F",strap:"#4A5659",desc:"Grey dial, no date window, nothing extra."},
+  {id:7,name:"Sandbar",cat:"Field",price:4299,dial:"#E6D9B8",ink:"#3B3224",strap:"#6B4A32",desc:"Sand dial and tan leather strap, easy to wear every day."},
+  {id:8,name:"Graphite",cat:"Sport",price:5499,dial:"#2B2F33",ink:"#F4F1E8",strap:"#2B2F33",desc:"All-dark finish with a stopwatch seconds hand."}
+];
+
+const money = n => "₹" + n.toLocaleString("en-IN");
+
+/* Draw a watch as SVG. live=true gives hands ids so they can move. */
+function watchSVG(dial, ink, strap, live){
+  let ticks = "";
+  for(let i=0;i<12;i++){
+    const big = i%3===0;
+    ticks += `<line x1="100" y1="${big?80:82}" x2="100" y2="${big?92:88}" stroke="${ink}" stroke-width="${big?3:1.5}" transform="rotate(${i*30} 100 130)"/>`;
+  }
+  const hh = live ? "" : 'transform="rotate(305 100 130)"';
+  const mm = live ? "" : 'transform="rotate(60 100 130)"';
+  return `<svg viewBox="0 0 200 260" aria-hidden="true">
+    <rect x="72" y="4" width="56" height="90" rx="10" fill="${strap}"/>
+    <rect x="72" y="166" width="56" height="90" rx="10" fill="${strap}"/>
+    <circle cx="100" cy="130" r="66" fill="#B9C0C2"/>
+    <circle cx="100" cy="130" r="62" fill="#8E979A"/>
+    <circle cx="100" cy="130" r="56" fill="${dial}"/>
+    ${ticks}
+    <rect x="97" y="${130-36}" width="6" height="36" rx="3" fill="${ink}" ${live?'id="hh"':hh} transform-origin="100 130"/>
+    <rect x="98.5" y="${130-50}" width="3" height="50" rx="1.5" fill="${ink}" ${live?'id="mm"':mm}/>
+    ${live?'<line id="ss" x1="100" y1="144" x2="100" y2="82" stroke="#C0572F" stroke-width="1.5"/>':""}
+    <circle cx="100" cy="130" r="4" fill="#C0572F"/>
+  </svg>`;
+}
+
+/* ---------- Hero live watch ---------- */
+const dials = [
+  {name:"Cream", dial:"#F4F1E8", ink:"#1B2A2F", strap:"#6B4A32"},
+  {name:"Forest", dial:"#3E5B45", ink:"#F4F1E8", strap:"#8A7A55"},
+  {name:"Navy", dial:"#1F2A44", ink:"#F4F1E8", strap:"#2B2B2B"},
+  {name:"Rust", dial:"#B5472B", ink:"#FFFFFF", strap:"#222222"}
+];
+const heroEl = document.getElementById("heroWatch");
+const swEl = document.getElementById("swatches");
+const swLabel = document.getElementById("swlabel");
+
+function setDial(i){
+  const d = dials[i];
+  heroEl.innerHTML = watchSVG(d.dial, d.ink, d.strap, true);
+  swLabel.textContent = d.name + " dial";
+  [...swEl.children].forEach((b,j)=>b.setAttribute("aria-pressed", j===i));
+  tick();
+}
+dials.forEach((d,i)=>{
+  const b = document.createElement("button");
+  b.className = "sw"; b.style.background = d.dial;
+  b.setAttribute("aria-label", d.name + " dial");
+  b.onclick = () => setDial(i);
+  swEl.appendChild(b);
+});
+function tick(){
+  const n = new Date();
+  const s = n.getSeconds(), m = n.getMinutes() + s/60, h = (n.getHours()%12) + m/60;
+  const set = (id,a) => { const e = document.getElementById(id); if(e) e.setAttribute("transform", `rotate(${a} 100 130)`); };
+  set("hh", h*30); set("mm", m*6); set("ss", s*6);
+}
+setDial(0);
+setInterval(tick, 1000);
+
+/* ---------- Product grid ---------- */
+const cats = ["All", ...new Set(products.map(p=>p.cat))];
+let active = "All";
+const filtersEl = document.getElementById("filters");
+const gridEl = document.getElementById("grid");
+
+function renderFilters(){
+  filtersEl.innerHTML = "";
+  cats.forEach(c=>{
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = c;
+    b.setAttribute("aria-pressed", c===active);
+    b.onclick = () => { active = c; renderFilters(); renderGrid(); };
+    filtersEl.appendChild(b);
+  });
+}
+function renderGrid(){
+  const list = products.filter(p => active==="All" || p.cat===active);
+  gridEl.innerHTML = list.map(p => `
+    <article class="card">
+      ${watchSVG(p.dial,p.ink,p.strap,false)}
+      <h3>${p.name}</h3>
+      <div class="cat">${p.cat} watch</div>
+      <p class="desc">${p.desc}</p>
+      <div class="row"><span class="price">${money(p.price)}</span>
+      <button class="add" data-id="${p.id}">Add to cart</button></div>
+    </article>`).join("");
+}
+gridEl.addEventListener("click", e => {
+  const b = e.target.closest(".add");
+  if(b) addToCart(+b.dataset.id);
+});
+renderFilters(); renderGrid();
+
+/* ---------- Cart ---------- */
+let cart = {}; // id -> quantity
+const drawer = document.getElementById("drawer");
+const scrim = document.getElementById("scrim");
+const itemsEl = document.getElementById("items");
+
+function addToCart(id){ cart[id] = (cart[id]||0) + 1; renderCart(); openCart(); }
+function change(id, d){
+  cart[id] = (cart[id]||0) + d;
+  if(cart[id] <= 0) delete cart[id];
+  renderCart();
+}
+function renderCart(){
+  const ids = Object.keys(cart);
+  let total = 0, count = 0;
+  itemsEl.innerHTML = ids.length ? ids.map(id=>{
+    const p = products.find(x=>x.id==id), q = cart[id];
+    total += p.price*q; count += q;
+    return `<div class="item"><div><strong>${p.name}</strong><br><span class="cat">${money(p.price)}</span></div>
+      <div class="qty"><button data-id="${id}" data-d="-1" aria-label="Remove one ${p.name}">−</button>
+      <span>${q}</span><button data-id="${id}" data-d="1" aria-label="Add one ${p.name}">+</button></div></div>`;
+  }).join("") : '<p class="empty">Your cart is empty. Add a watch to get started.</p>';
+  document.getElementById("count").textContent = count;
+  document.getElementById("total").textContent = money(total);
+}
+itemsEl.addEventListener("click", e=>{
+  const b = e.target.closest("button[data-id]");
+  if(b) change(b.dataset.id, +b.dataset.d);
+});
+function openCart(){ drawer.classList.add("open"); scrim.classList.add("show"); drawer.setAttribute("aria-hidden","false"); }
+function closeCart(){ drawer.classList.remove("open"); scrim.classList.remove("show"); drawer.setAttribute("aria-hidden","true"); }
+document.getElementById("cartBtn").onclick = openCart;
+document.getElementById("closeCart").onclick = closeCart;
+scrim.onclick = closeCart;
+document.addEventListener("keydown", e => { if(e.key==="Escape") closeCart(); });
+document.getElementById("checkout").onclick = () => {
+  if(!Object.keys(cart).length){ alert("Add a watch before checking out."); return; }
+  alert("Thanks for your order! This is a demo store, so no payment was taken.");
+  cart = {}; renderCart(); closeCart();
+};
+renderCart();
+
+/* ---------- Mobile menu ---------- */
+const menuBtn = document.getElementById("menuBtn"), nav = document.getElementById("nav");
+menuBtn.onclick = () => {
+  const open = nav.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", open);
+};
+nav.addEventListener("click", e => { if(e.target.tagName==="A") nav.classList.remove("open"); });
+
+/* ---------- Newsletter form ---------- */
+document.getElementById("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = document.getElementById("email").value.trim();
+  const msg = document.getElementById("msg");
+  if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){
+    msg.textContent = "You are subscribed. We will email " + v + " about new releases.";
+    e.target.reset();
+  } else {
+    msg.textContent = "Enter a valid email address, for example name@example.com.";
+  }
+});
+</script>
+</body>
+</html>
